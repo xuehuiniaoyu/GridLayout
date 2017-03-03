@@ -15,7 +15,7 @@ allprojects {
 
 dependencies {
 	...
-	compile 'com.github.xuehuiniaoyu:GridLayout:1.0-beta'
+	compile 'com.github.xuehuiniaoyu:GridLayout:1.1-beta'
 }
 
 ```
