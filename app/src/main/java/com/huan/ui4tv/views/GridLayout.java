@@ -1,4 +1,4 @@
-package com.huan.ui4tv.views;
+package com.example.gridTest.views;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -49,6 +49,9 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
 
     // 可见高度的高度（不包括layoutY）
     private int layoutHeight;
+
+    private int layoutMeasureWidth;
+    private int layoutMeasureHeight;
 
     // 安全边距（保证显示在屏幕内）
     private int freePlace;
@@ -462,19 +465,24 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
         }
     }
 
+    protected final void setMeasuredDimension() {
+        setMeasuredDimension(View.MeasureSpec.makeMeasureSpec(layoutMeasureWidth, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(layoutMeasureHeight, View.MeasureSpec.EXACTLY));
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Grid grid;
+        int gaps = getGap() * 2;
         for ( Integer key : gridHashRegistry.keySet() ) {
             grid = gridHashRegistry.get(key);
             if(grid.mView != null) {
                 Grid.LayoutParams lp = grid.params;
                 int width = View.MeasureSpec.makeMeasureSpec(lp.width, View.MeasureSpec.EXACTLY);
                 int height = View.MeasureSpec.makeMeasureSpec(lp.height, View.MeasureSpec.EXACTLY);
-                grid.mView.measure(width - gap * 2, height - gap * 2);
+                grid.mView.measure(width - gaps, height - gaps);
             }
         }
-        setMeasuredDimension(View.MeasureSpec.makeMeasureSpec(layoutX + layoutWidth, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(layoutY + layoutHeight, View.MeasureSpec.EXACTLY));
+        setMeasuredDimension();
     }
 
     @Override
@@ -582,6 +590,7 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
 
     public void setLayoutX(int layoutX) {
         this.layoutX = layoutX;
+        layoutMeasureWidth = this.layoutWidth + this.layoutX;
     }
 
     public int getLayoutY() {
@@ -590,6 +599,7 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
 
     public void setLayoutY(int layoutY) {
         this.layoutY = layoutY;
+        layoutMeasureHeight =this.layoutHeight + this.layoutY;
     }
 
     public int getLayoutWidth() {
@@ -598,6 +608,7 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
 
     public void setLayoutWidth(int layoutWidth) {
         this.layoutWidth = layoutWidth;
+        layoutMeasureWidth = this.layoutWidth + this.layoutX;
     }
 
     public int getLayoutHeight() {
@@ -606,6 +617,7 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
 
     public void setLayoutHeight(int layoutHeight) {
         this.layoutHeight = layoutHeight;
+        layoutMeasureHeight =this.layoutHeight + this.layoutY;
     }
 
     public int getFreePlace() {

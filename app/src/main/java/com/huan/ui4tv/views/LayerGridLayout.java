@@ -1,7 +1,8 @@
-package com.huan.ui4tv.views;
+package com.example.gridTest.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -175,10 +176,28 @@ public class LayerGridLayout extends GridLayout {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Grid grid;
+        LayerGrid data;
+        int gaps = getGap() * 2;
+        for(Integer id : mLayerGrids.keySet()) {
+            data = mLayerGrids.get(id);
+            grid = getGridAt(id);
+            for(String tag : data.views.keySet()) {
+                int width = View.MeasureSpec.makeMeasureSpec(grid.params.width, View.MeasureSpec.EXACTLY);
+                int height = View.MeasureSpec.makeMeasureSpec(grid.params.height, View.MeasureSpec.EXACTLY);
+                data.views.get(tag).measure(width - gaps, height - gaps);
+            }
+        }
+        setMeasuredDimension();
+    }
+
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        for(Integer key : mLayerGrids.keySet()) {
+        Log.i(TAG, "onLayout:"+changed);
+        for (Integer key : mLayerGrids.keySet()) {
             LayerGrid item = mLayerGrids.get(key);
-            for(String tag : item.views.keySet()) {
+            for (String tag : item.views.keySet()) {
                 draw(item.views.get(tag));
             }
         }
