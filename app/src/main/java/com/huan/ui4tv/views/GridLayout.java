@@ -240,7 +240,7 @@ public class GridLayout extends TouchGroup implements View.OnFocusChangeListener
      */
     public void addGridView(int position, View view) {
         Grid grid = gridHashRegistry.get(position);
-        super.addView(grid.mView = view);
+        super.addView(grid.mView = view, -1, grid.params);
     }
 
     /**
